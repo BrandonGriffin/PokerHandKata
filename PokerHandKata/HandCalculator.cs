@@ -14,14 +14,14 @@ namespace PokerHandKata
 
             if (IsStraight() && IsFlush())
                 return "Straight Flush";
-            if (IsStraight())
-                return "Straight";
-            if (IsFlush())
-                return "Flush";
             if (HasFourOfAKind())
                 return "Four of a Kind";
             if (HasFullHouse())
                 return "Full House";
+            if (IsFlush())
+                return "Flush";
+            if (IsStraight())
+                return "Straight";
             if (HasThreeOfAKind())
                 return "Three of a Kind";
             if (HasTwoPair())
@@ -42,11 +42,24 @@ namespace PokerHandKata
                 var card = new Card(value);
                 hand.Add(card);
             }
+
+            hand.OrderBy(h => h.Value);
         }
 
         private Boolean IsStraight()
         {
-            return hand.Max(h => h.Value) - hand.Min(h => h.Value) == 4 && hand.GroupBy(h => h.Value).Count() == 5;
+            if (hand.Max(h => h.Value) - hand.Min(h => h.Value) == 4 && hand.GroupBy(h => h.Value).Count() == 5)
+                return true;
+
+            if (IsAceLowStraight())
+                return true;
+
+            return false;
+        }
+
+        private Boolean IsAceLowStraight()
+        {
+            return hand.GroupBy(h => h.Value).Count() == 5 && hand.Min(h => h.Value) == 2 && hand.Sum(h => h.Value) == 28;
         }
 
         private Boolean IsFlush()

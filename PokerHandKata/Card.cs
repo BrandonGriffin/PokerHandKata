@@ -16,7 +16,6 @@ namespace PokerHandKata
             this.card = card;
             valueConverter = new Dictionary<Char, Int32>
             {
-                { 'A', 1 },
                 { '2', 2 },
                 { '3', 3 },
                 { '4', 4 },
@@ -29,6 +28,7 @@ namespace PokerHandKata
                 { 'J', 11 },
                 { 'Q', 12 },
                 { 'K', 13 },
+                { 'A', 14 }
             };
 
             Value = valueConverter[card[0]];

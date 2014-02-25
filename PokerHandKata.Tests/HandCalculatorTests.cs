@@ -75,5 +75,12 @@ namespace PokerHandKata.Tests
             var actual = scorer.ScoreHand("2S 3S 6S 5S 4S");
             Assert.That(actual, Is.EqualTo("Straight Flush"));
         }
+
+        [Test]
+        public void AceLowStraightShouldReturnStraight()
+        {
+            var actual = scorer.ScoreHand("2S AH 5C 3S 4S");
+            Assert.That(actual, Is.EqualTo("Straight"));
+        }
     }
 }
