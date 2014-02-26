@@ -11,11 +11,8 @@ namespace PokerHandKata
             var splitCards = cardString.Split(' ');
             var hand = new List<Card>();
 
-            foreach (var value in splitCards)
-            {
-                var card = new Card(value);
-                hand.Add(card);
-            }
+            foreach (var card in splitCards)
+                hand.Add(new Card(card));
 
             hand.OrderBy(h => h.Value);
 

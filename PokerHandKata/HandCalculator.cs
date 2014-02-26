@@ -50,7 +50,7 @@ namespace PokerHandKata
         
         private Boolean IsStraight()
         {
-            if (hand.Max(h => h.Value) - hand.Min(h => h.Value) == 4 && valueGroups.Count() == 5)
+            if (hand.Max(c => c.Value) - hand.Min(c => c.Value) == 4 && valueGroups.Count() == 5)
                 return true;
 
             if (IsAceLowStraight())
@@ -61,12 +61,12 @@ namespace PokerHandKata
 
         private Boolean IsAceLowStraight()
         {
-            return valueGroups.Count() == 5 && hand.Min(h => h.Value) == 2 && hand.Sum(h => h.Value) == 28;
+            return valueGroups.Count() == 5 && hand.Min(c => c.Value) == 2 && hand.Sum(c => c.Value) == 28;
         }
 
         private Boolean IsFlush()
         {
-            return hand.GroupBy(h => h.Suit).Count() == 1;
+            return hand.GroupBy(c => c.Suit).Count() == 1;
         }
 
         private Boolean HasFourOfAKind()
