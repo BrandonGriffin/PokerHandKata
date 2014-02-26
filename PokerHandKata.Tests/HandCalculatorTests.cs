@@ -10,7 +10,8 @@ namespace PokerHandKata.Tests
         [SetUp]
         public void SetUp()
         {
-            scorer = new HandCalculator();
+            var converter = new Converter();
+            scorer = new HandCalculator(converter);
         }
 
         [Test]

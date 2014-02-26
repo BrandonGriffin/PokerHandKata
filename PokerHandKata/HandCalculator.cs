@@ -6,21 +6,32 @@ namespace PokerHandKata
 {
     public class HandCalculator
     {
-        private List<Card> hand;
+        private Converter converter;
+        private IEnumerable<Card> hand;
+        private IEnumerable<IGrouping<Int32, Card>> valueGroups;
+
+        public HandCalculator(Converter converter)
+        {
+            this.converter = converter;
+        }
 
         public String ScoreHand(String cardString)
         {
-            ConvertStringToHand(cardString);
+            this.hand = converter.ConvertStringToHand(cardString);
+            valueGroups = GetValueGroups();
 
-            if (IsStraight() && IsFlush())
+            var isStraight = IsStraight();
+            var isFlush = IsFlush();
+
+            if (isStraight && isFlush)
                 return "Straight Flush";
             if (HasFourOfAKind())
                 return "Four of a Kind";
             if (HasFullHouse())
                 return "Full House";
-            if (IsFlush())
+            if (isFlush)
                 return "Flush";
-            if (IsStraight())
+            if (isStraight)
                 return "Straight";
             if (HasThreeOfAKind())
                 return "Three of a Kind";
@@ -32,23 +43,14 @@ namespace PokerHandKata
             return "High Card";
         }
         
-        private void ConvertStringToHand(String cardString)
+        private IEnumerable<IGrouping<Int32, Card>> GetValueGroups()
         {
-            var splitCards = cardString.Split(' ');
-            hand = new List<Card>();
-
-            foreach (var value in splitCards)
-            {
-                var card = new Card(value);
-                hand.Add(card);
-            }
-
-            hand.OrderBy(h => h.Value);
+            return hand.GroupBy(c => c.Value);
         }
-
+        
         private Boolean IsStraight()
         {
-            if (hand.Max(h => h.Value) - hand.Min(h => h.Value) == 4 && hand.GroupBy(h => h.Value).Count() == 5)
+            if (hand.Max(h => h.Value) - hand.Min(h => h.Value) == 4 && valueGroups.Count() == 5)
                 return true;
 
             if (IsAceLowStraight())
@@ -59,7 +61,7 @@ namespace PokerHandKata
 
         private Boolean IsAceLowStraight()
         {
-            return hand.GroupBy(h => h.Value).Count() == 5 && hand.Min(h => h.Value) == 2 && hand.Sum(h => h.Value) == 28;
+            return valueGroups.Count() == 5 && hand.Min(h => h.Value) == 2 && hand.Sum(h => h.Value) == 28;
         }
 
         private Boolean IsFlush()
@@ -69,27 +71,27 @@ namespace PokerHandKata
 
         private Boolean HasFourOfAKind()
         {
-            return hand.GroupBy(h => h.Value).Any(g => g.Count() > 3);
+            return valueGroups.Any(g => g.Count() > 3);
         }
 
         private Boolean HasFullHouse()
         {
-            return hand.GroupBy(h => h.Value).Count() == 2;
+            return valueGroups.Count() == 2;
         }
 
         private Boolean HasThreeOfAKind()
         {
-            return hand.GroupBy(h => h.Value).Any(g => g.Count() > 2);
+            return valueGroups.Any(g => g.Count() > 2);
         }
 
         private Boolean HasTwoPair()
         {
-            return hand.GroupBy(h => h.Value).Count() == 3;
+            return valueGroups.Count() == 3;
         }
         
         private Boolean HasPair()
         {
-            return hand.GroupBy(h => h.Value).Any(g => g.Count() > 1);
+            return valueGroups.Any(g => g.Count() > 1);
         }
     }
 }

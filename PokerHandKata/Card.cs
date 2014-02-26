@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace PokerHandKata
 {
-    class Card
+    public class Card
     {
         public Int32 Value { get; private set; }
         public Char Suit { get; private set; }
